@@ -1,6 +1,8 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Material ui 5 OK
+eslint + prettier + editorconfig OK
+Configura Redux
 
 ## Available Scripts
 
