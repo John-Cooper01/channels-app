@@ -1,13 +1,12 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { BrowserRouter as Router } from 'react-router-dom';
+import MainRoutes from './routes';
 
 function App() {
   return (
-    <div>
-      <Box bgcolor="background.paper">
-        <h1>Hello word</h1>
-      </Box>
-    </div>
+    <Router>
+      <MainRoutes />
+    </Router>
   );
 }
 
