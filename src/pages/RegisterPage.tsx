@@ -8,7 +8,7 @@ interface FormData {
   password: string;
 }
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { register, handleSubmit } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = data => console.log(data);
@@ -31,7 +31,7 @@ export default function LoginPage() {
           borderRadius={4}
           sx={{ '& h1': { margin: '0 0 1rem 0' } }}
         >
-          <h1>Faça seu login</h1>
+          <h1>Crie sua conta</h1>
           <Box
             display="flex"
             flexDirection="column"
@@ -93,7 +93,7 @@ export default function LoginPage() {
               size="large"
               type="submit"
             >
-              Entrar
+              CADASTRAR
             </ButtonStyle>
 
             <Divider
@@ -121,6 +121,21 @@ export default function LoginPage() {
             >
               Google
             </ButtonStyle>
+            <Box
+              width="350px"
+              mt={2}
+              textAlign="center"
+              sx={{
+                '& a': {
+                  fontWeight: 'bold',
+                  color: '#014998',
+                  cursor: 'pointer',
+                },
+              }}
+            >
+              Ao se registrar, você aceita nossos <a>termos de uso</a> e a nossa{' '}
+              <a>política de privacidade</a>.
+            </Box>
           </Box>
         </Box>
       </Box>

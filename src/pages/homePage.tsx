@@ -1,11 +1,13 @@
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 
 export default function HomePage() {
   return (
-    <div>
-      <Box bgcolor="background.paper">
-        <h1>Home</h1>
-      </Box>
-    </div>
+    <>
+      <Container maxWidth="xl">
+        <Box bgcolor="background.paper">
+          <h1>Home</h1>
+        </Box>
+      </Container>
+    </>
   );
 }
