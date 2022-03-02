@@ -5,10 +5,16 @@ import { red } from '@mui/material/colors';
 const theme = createTheme({
   palette: {
     primary: {
+      light: '#3487e1',
       main: '#0269DA ',
+      dark: '#014998',
+      contrastText: '#fff',
     },
     secondary: {
+      light: '#34aff7',
       main: '#029BF6',
+      dark: '#016cac',
+      contrastText: '#fff',
     },
     error: {
       main: red.A400,
@@ -19,7 +25,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#EFEFEF',
-      secondary: '#0269DA',
+      secondary: '#78909c',
     },
   },
   // breakpoints: {
@@ -48,3 +54,9 @@ const theme = createTheme({
 });
 
 export default theme;
+
+/*
+#0f1217
+paper: #161B22
+#44484e
+*/

@@ -1,7 +1,13 @@
 # Getting Started with Create React App
 
 Material ui 5 OK
+
 eslint + prettier + editorconfig OK
+
+React Router Dom OK
+
+Criar telas Login, Cadastro e Home
+
 Configura Redux
 
 ## Available Scripts
