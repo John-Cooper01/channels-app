@@ -2,6 +2,12 @@ import { Container, Box, TextField, Divider } from '@mui/material';
 import ButtonStyle from '../components/Button';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
+import { auth } from '../utils/firebase';
 
 interface FormData {
   email: string;
@@ -11,11 +17,33 @@ interface FormData {
 export default function RegisterPage() {
   const { register, handleSubmit } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = data => console.log(data);
+  const registerUser: SubmitHandler<FormData> = async data => {
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password,
+      );
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const signInGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      //console.log(user.email, 'user');
+    } catch (error) {
+      console.log(error, 'error');
+    }
+  };
+
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" sx={{ height: '90vh' }}>
       <Box
-        height="100vh"
+        height="100%"
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -35,8 +63,9 @@ export default function RegisterPage() {
           <Box
             display="flex"
             flexDirection="column"
+            alignItems="initial"
             component="form"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(registerUser)}
           >
             <TextField
               {...register('email')}
@@ -47,7 +76,7 @@ export default function RegisterPage() {
               variant="outlined"
               size="medium"
               sx={{
-                width: '350px',
+                width: { xs: '300px', md: '350px' },
                 mb: 5,
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
@@ -71,7 +100,7 @@ export default function RegisterPage() {
               variant="outlined"
               size="medium"
               sx={{
-                width: '350px',
+                width: { xs: '300px', md: '350px' },
                 mb: 3,
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
@@ -118,6 +147,7 @@ export default function RegisterPage() {
               startIcon={<FcGoogle />}
               color="primary"
               size="large"
+              onClick={signInGoogle}
             >
               Google
             </ButtonStyle>

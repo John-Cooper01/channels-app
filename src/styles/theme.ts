@@ -25,7 +25,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#EFEFEF',
-      secondary: '#0269DA',
+      secondary: '#78909c',
     },
   },
   // breakpoints: {
@@ -54,3 +54,9 @@ const theme = createTheme({
 });
 
 export default theme;
+
+/*
+#0f1217
+paper: #161B22
+#44484e
+*/

@@ -1,4 +1,8 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { auth } from '../../utils/firebase';
+
 import AppBar from '@mui/material/AppBar';
 import {
   Container,
@@ -13,11 +17,9 @@ import {
   Menu,
 } from '@mui/material';
 import { AiOutlineMenu } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
 
 const pages = ['Home', 'Entrar', 'Cadastrar'];
 const urls = ['/', '/login', '/register'];
-const settings = ['Logout'];
 
 export default function MainAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -42,6 +44,18 @@ export default function MainAppBar() {
     setAnchorElUser(null);
   };
 
+  const [userData, setUserData] = React.useState<User | null>(null);
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, user => {
+      setUserData(user ? user : null);
+    });
+  }, [userData]);
+
+  const logout = () => {
+    return signOut(auth);
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -52,7 +66,7 @@ export default function MainAppBar() {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            ChannelsBot
+            ChannelsDevs
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -91,6 +105,15 @@ export default function MainAppBar() {
                   </Link>
                 </MenuItem>
               ))}
+              {userData ? (
+                <Tooltip title="Deseja mesmo sair ? :( ">
+                  <MenuItem onClick={logout}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Tooltip>
+              ) : (
+                ''
+              )}
             </Menu>
           </Box>
           <Typography
@@ -99,8 +122,9 @@ export default function MainAppBar() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            ChannelsBot
+            ChannelsDevs
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map(page => (
               <Button
@@ -115,9 +139,12 @@ export default function MainAppBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Tooltip title="Menu">
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0, display: { xs: 'none', md: 'initial' } }}
+              >
+                <Avatar alt="Jho" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -136,11 +163,18 @@ export default function MainAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem>
+                <Typography textAlign="center">ChannelsDevs</Typography>
+              </MenuItem>
+              {userData ? (
+                <Tooltip title="Deseja mesmo sair ? :( ">
+                  <MenuItem onClick={logout}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Tooltip>
+              ) : (
+                ''
+              )}
             </Menu>
           </Box>
         </Toolbar>
