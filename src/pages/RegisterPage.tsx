@@ -1,105 +1,15 @@
-import { Container, Box, TextField, Divider } from '@mui/material';
-import ButtonStyle from '../components/Button';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { FcGoogle } from 'react-icons/fc';
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from 'firebase/auth';
-import { auth } from '../utils/firebase';
+import { useForm } from 'react-hook-form';
 
-import {
-  collection,
-  getDocs,
-  getDoc,
-  addDoc,
-  updateDoc,
-  doc,
-  setDoc,
-} from 'firebase/firestore';
-import { db } from '../utils/firebase';
+import { Container, Box, TextField, Divider } from '@mui/material';
+import { FcGoogle } from 'react-icons/fc';
+import ButtonStyle from '../components/Button';
 import MainAppBar from '../components/AppBar';
 import { useAuth } from '../hooks/useAuth';
-
-interface FormData {
-  username?: string;
-  email: string;
-  password: string;
-}
+import { FormDataRegisterUser } from './types';
 
 export default function RegisterPage() {
-  const { register, handleSubmit } = useForm<FormData>();
-  const { LoginGoogle } = useAuth();
-
-  const registerUser: SubmitHandler<FormData> = async data => {
-    try {
-      const userInfo = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password,
-      );
-
-      const userDoc = await collection(db, 'users');
-
-      await addDoc(userDoc, {
-        name: data.username,
-        email: userInfo.user.email,
-        userId: userInfo.user.uid,
-        createdUp: new Date(),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const signInGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const userInfoGoogle = await signInWithPopup(auth, provider);
-      const docRef = await doc(db, 'users', userInfoGoogle.user.uid);
-
-      setDoc(
-        docRef,
-        {
-          name: userInfoGoogle.user.displayName,
-          email: userInfoGoogle.user.email,
-          userId: userInfoGoogle.user.uid,
-          createdUp: new Date(),
-        },
-        { merge: true },
-      );
-    } catch (error) {
-      console.log(error, 'error');
-    }
-  };
-
-  /*
- const userDoc = await collection(db, 'chat');
-userId
-createdUp: Date
-messages: [{
-  userId: string
-  message: string
-  createdUp: Date
-}]
-name: string
-
-
-
-      const chatDoc = await collection(db, 'chat');
-      await addDoc(chat, {
-        userId: userInfo.user.uid,
-        name: string
-        createdUp: Date
-        messages: []
-        usersId: [userInfo.user.uid]
-      });
-
-      // const dadta = await query(chatDoc, where('usersId', "array-contains", userInfo.user.uid,));
-
-
-*/
+  const { register, handleSubmit } = useForm<FormDataRegisterUser>();
+  const { registerUser, LoginGoogle } = useAuth();
 
   return (
     <>
@@ -182,7 +92,6 @@ name: string
                 label="password"
                 color="primary"
                 type="password"
-                //defaultValue=""
                 variant="outlined"
                 size="medium"
                 sx={{

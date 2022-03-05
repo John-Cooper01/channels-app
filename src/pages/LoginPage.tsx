@@ -1,6 +1,6 @@
 import { Container, Box, TextField, Divider } from '@mui/material';
 import ButtonStyle from '../components/Button';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../hooks/useAuth';
 import MainAppBar from '../components/AppBar';
@@ -13,7 +13,7 @@ interface FormData {
 export default function LoginPage() {
   const { register, handleSubmit } = useForm<FormData>();
 
-  const { Login, LoginGoogle } = useAuth();
+  const { LoginGoogle, loginEmailAndPassword } = useAuth();
 
   return (
     <>
@@ -42,7 +42,7 @@ export default function LoginPage() {
               flexDirection="column"
               alignItems="initial"
               component="form"
-              onSubmit={Login}
+              onSubmit={handleSubmit(loginEmailAndPassword)}
             >
               <TextField
                 {...register('email')}

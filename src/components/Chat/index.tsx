@@ -1,60 +1,40 @@
-import { useEffect, useState } from 'react';
-import { db } from '../../utils/firebase';
-import {
-  collection,
-  doc,
-  onSnapshot,
-  getDocs,
-  setDoc,
-  query,
-  where,
-} from 'firebase/firestore';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { Box, IconButton } from '@mui/material';
 import { AiOutlineSend } from 'react-icons/ai';
-import { useReduxSelector } from '../../hooks/useReduxSelector';
+//import { useReduxSelector } from '../../hooks/useReduxSelector';
+import MessageItem from '../MessageItem';
+import { useChat } from '../../hooks/useChat';
+import { FormData } from './type';
 
 export default function Chat() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
-  const [messages, setMessages] = useState([]);
-  const usersCollectionRef = collection(db, 'chat');
+  const { sendMessage } = useChat();
+  const [listItem, setListItem] = useState([
+    {
+      id: 1,
+      idUser: 12,
+      author: 'Jhonatas',
+      body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis rem corporis libero architecto officiis, voluptas perferendis, sit iste mollitia aliquid dolor sed placeat quos eius quia, esse repellat ipsam maiores!',
+    },
+    {
+      id: 2,
+      idUser: 121,
+      author: 'Jhonatas',
+      body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis rem corporis libero architecto officiis, voluptas perferendis, sit iste mollitia aliquid dolor sed placeat quos eius quia, esse repellat ipsam maiores!',
+    },
+    { id: 3, idUser: 122, author: 'joao', body: 'lorem' },
+    { id: 4, idUser: 123, author: 'Guilherme', body: 'Hello' },
+    { id: 5, idUser: 124, author: 'Jhonatas', body: 'Hello' },
+    { id: 6, idUser: 124, author: 'Jhonatas', body: 'Hello' },
+    { id: 7, idUser: 124, author: 'Jhonatas', body: 'Hello' },
+    { id: 8, idUser: 124, author: 'Jhonatas', body: 'Hello' },
+    { id: 9, idUser: 124, author: 'Jhonatas', body: 'Hello' },
+  ]);
 
-  const { userId } = useReduxSelector(state => state.user);
-
-  interface FormData {
-    body: string;
-  }
-
-  const sendMessage: SubmitHandler<FormData> = async data => {
-    try {
-      const docRef = await doc(usersCollectionRef);
-
-      const queryChats = await query(
-        usersCollectionRef,
-        where('usersId', 'array-contains', userId),
-      );
-      const querySnapshot = await getDocs(queryChats);
-
-      onSnapshot(usersCollectionRef, snapshot => {
-        const chatIds = snapshot.docs.map(doc => doc.id);
-      });
-
-      // setDoc(
-      //   docRef,
-      //   {
-      //     messages: [...messages, author, data.body, new Date()],
-      //   },
-      //   { merge: true },
-      // );
-    } catch (error) {
-      console.log(error, 'error');
-    }
-  };
+  const { register, handleSubmit } = useForm<FormData>();
+  //const usersCollectionRef = collection(db, 'chat');
+  //const { userId } = useReduxSelector(state => state.user);
 
   return (
     <>
@@ -86,7 +66,14 @@ export default function Chat() {
             },
           }}
         >
-          TEXTO
+          {listItem.map(item => (
+            <MessageItem
+              key={item.id}
+              idUser={item.idUser}
+              author={item.author}
+              body={item.body}
+            />
+          ))}
         </Box>
         <Box
           height="3.9rem"
@@ -114,6 +101,7 @@ export default function Chat() {
         >
           <input
             {...register('body', { required: true })}
+            autoComplete="off"
             type="text"
             placeholder="Mensagem"
           />

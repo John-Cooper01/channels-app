@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   GoogleAuthProvider,
@@ -9,38 +10,52 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
 import { db } from '../../utils/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, doc, addDoc, setDoc } from 'firebase/firestore';
+import { SubmitHandler } from 'react-hook-form';
 import {
   isInfo,
   isLogin,
   isLogout,
 } from '../../features/featureUser/userSlice';
 import { useReduxDispatch } from '../useReduxDispath';
-//import { LoginProps } from './types';
+import { FormDataRegisterUser, FormData } from './types';
 
 export function useAuth() {
+  const userDocRef = collection(db, 'users');
   //const { isAuth } = useReduxSelector(state => state.user);
   const dispatch = useReduxDispatch();
-
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState<any>({} as any);
 
-  async function Login({ email, password }: any) {
+  const registerUser: SubmitHandler<FormDataRegisterUser> = async data => {
     try {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      console.log('12', user);
-      if (user) {
-        setUserInfo({
-          uid: user.uid,
-          email: user.email,
-        });
-        //dispatch(isLogin());
-        navigate('/');
-      }
+      const userInfo = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password,
+      );
+
+      //const userDoc = await collection(db, 'users');
+
+      await addDoc(userDocRef, {
+        name: data.username,
+        email: userInfo.user.email,
+        userId: userInfo.user.uid,
+        createdUp: new Date(),
+      });
     } catch (error) {
-      console.log('Error: ', error);
+      console.log(error);
     }
-  }
+  };
+
+  const loginEmailAndPassword: SubmitHandler<FormData> = async data => {
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      navigate('/');
+      console.log('Login com sucesso');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const LoginGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -58,8 +73,8 @@ export function useAuth() {
         },
         { merge: true },
       );
-      await navigate('/');
-      await dispatch(isLogin(true));
+      navigate('/');
+      dispatch(isLogin(true));
     } catch (error) {
       console.log(error, 'error');
     }
@@ -76,21 +91,6 @@ export function useAuth() {
       });
   };
 
-  const openChat = async () => {
-    try {
-      // const queryChats = await query(
-      //   usersCollectionRef,
-      //   where('usersId', 'array-contains', userId),
-      // );
-      // const querySnapshot = await getDocs(queryChats);
-      // const unsubscribe = onSnapshot(usersCollectionRef, snapshot => {
-      //   const chatIds = snapshot.docs.map(doc => doc.id);
-      // });
-    } catch (error) {
-      console.log(error, 'error');
-    }
-  };
-
   useEffect(() => {
     onAuthStateChanged(auth, user => {
       if (user) {
@@ -99,7 +99,10 @@ export function useAuth() {
         dispatch(isInfo(userId));
       }
     });
+    return () => {
+      console.log('Usuario offline');
+    };
   }, []);
 
-  return { Login, Logout, LoginGoogle };
+  return { registerUser, loginEmailAndPassword, LoginGoogle, Logout };
 }

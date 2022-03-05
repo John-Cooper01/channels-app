@@ -1,6 +1,11 @@
 import { Box, Avatar, Typography, Divider } from '@mui/material';
 
-export default function ChatsList({ id, name }: any) {
+interface ChatsListProps {
+  id: string;
+  name: string;
+}
+
+export default function ChatsList({ id, name }: ChatsListProps) {
   return (
     <>
       <Box key={id} width="100%" sx={{ '& :hover': { bgcolor: '#44484e' } }}>

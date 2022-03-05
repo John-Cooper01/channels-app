@@ -1,59 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { onAuthStateChanged } from 'firebase/auth';
 import { db } from '../utils/firebase';
-import { auth } from '../utils/firebase';
-import {
-  collection,
-  doc,
-  addDoc,
-  getDocs,
-  getDoc,
-  query,
-  where,
-} from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useForm } from 'react-hook-form';
 import { useReduxSelector } from '../hooks/useReduxSelector';
 
 import { Box, Container, Divider, Avatar, IconButton } from '@mui/material';
 import { BiMessageSquareAdd } from 'react-icons/bi';
-
 import MainAppBar from '../components/AppBar';
 import ChatsList from '../components/ChatsList';
 import Chat from '../components/Chat';
-import { listChatsProps } from './types';
-
-interface FormData {
-  nameChat: string;
-}
+import { useChat } from '../hooks/useChat';
+import { FormDataChannel, listChatsProps } from './types';
 
 export default function ChannelPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
+  const { register, handleSubmit } = useForm<FormDataChannel>();
   const usersCollectionRef = collection(db, 'chat');
-  const [chats, setChats] = useState<any>([]);
-  console.log(chats, 'teste');
-
+  const [chats, setChats] = useState<listChatsProps[]>([]);
   const { userId, isAuth } = useReduxSelector(state => state.user);
-
-  const createchat: SubmitHandler<FormData> = async data => {
-    await onAuthStateChanged(auth, user => {
-      if (user) {
-        console.log(user, 'user');
-        addDoc(usersCollectionRef, {
-          userId: user.uid,
-          name: data.nameChat,
-          createdUp: new Date(),
-          messages: [],
-          usersId: [user.uid],
-        });
-      } else {
-        console.log('error');
-      }
-    });
-  };
+  const { statusCreate } = useReduxSelector(state => state.chat);
+  const { createChat } = useChat();
 
   useEffect(() => {
     const busca = async () => {
@@ -64,17 +29,13 @@ export default function ChannelPage() {
           where('usersId', 'array-contains', userId),
         );
         const querySnapshot = await getDocs(queryChats);
-        console.log(
-          querySnapshot.docs.map(doc => doc.id),
-          'querySnapshot',
-        );
 
         const listChats: listChatsProps[] = [];
         querySnapshot.forEach(doc => {
           const data = doc.data();
-          // console.log(data.messages, 'data');
           listChats.push({
-            id: data.userId,
+            idChat: doc.id,
+            idUser: data.userId,
             name: data.name,
           });
         });
@@ -84,7 +45,8 @@ export default function ChannelPage() {
       }
     };
     busca();
-  }, [isAuth]);
+  }, [isAuth, statusCreate]);
+
   return (
     <>
       <MainAppBar />
@@ -96,19 +58,7 @@ export default function ChannelPage() {
           justifyContent="center"
           bgcolor="background.paper"
         >
-          <Box
-            width="30%"
-            height="100%"
-            sx={{
-              overflow: 'overlay',
-              '&::-webkit-scrollbar': { width: '0.1rem' },
-              '&::-webkit-scrollbar-track': { background: '#434F5C' },
-              '&::-webkit-scrollbar-thumb': {
-                background: '#0269DA ',
-                borderRadius: '0.2rem',
-              },
-            }}
-          >
+          <Box width="30%" height="100%" sx={{}}>
             <Box
               width="100%"
               height="4.375rem"
@@ -117,7 +67,11 @@ export default function ChannelPage() {
               alignItems="center"
               bgcolor="#44484e"
             >
-              <Avatar alt="Jho" src="/images/jhonatas.jpg" />
+              <Avatar
+                alt="Jho"
+                src="/images/jhonatas.jpg"
+                sx={{ width: '3.125rem', height: '3.125rem' }}
+              />
             </Box>
 
             <Box
@@ -148,23 +102,40 @@ export default function ChannelPage() {
             >
               <input
                 {...register('nameChat', { required: true })}
+                autoComplete="off"
                 type="text"
                 placeholder="Criar novo grupo"
               />
-              {/* {errors.nameChat && errors.nameChat.type === 'required' && (
-                <span>This is required</span>
-              )} */}
+
               <IconButton
                 color="primary"
                 component="span"
-                onClick={handleSubmit(createchat)}
+                onClick={handleSubmit(createChat)}
               >
                 <BiMessageSquareAdd />
               </IconButton>
             </Box>
-            {chats.map((chat: listChatsProps, index: number) => (
-              <ChatsList key={index} id={index} name={chat.name} />
-            ))}
+
+            <Box
+              height="549px"
+              sx={{
+                overflow: 'overlay',
+                '&::-webkit-scrollbar': { width: '0.4rem' },
+                '&::-webkit-scrollbar-track': { background: '#434F5C' },
+                '&::-webkit-scrollbar-thumb': {
+                  background: '#0269DA ',
+                  borderRadius: '0.2rem',
+                },
+              }}
+            >
+              {chats.map((chat: listChatsProps) => (
+                <ChatsList
+                  key={chat.idChat}
+                  id={chat.idChat}
+                  name={chat.name}
+                />
+              ))}
+            </Box>
           </Box>
           <Divider
             orientation="vertical"
@@ -176,7 +147,4 @@ export default function ChannelPage() {
       </Container>
     </>
   );
-}
-{
-  /* <pre>{JSON.stringify(userData, null, 2)}</pre> */
 }
