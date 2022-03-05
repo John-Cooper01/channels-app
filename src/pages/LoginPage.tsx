@@ -1,14 +1,9 @@
 import { Container, Box, TextField, Divider } from '@mui/material';
 import ButtonStyle from '../components/Button';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
-import {
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from 'firebase/auth';
-import { auth } from '../utils/firebase';
+import { useAuth } from '../hooks/useAuth';
+import MainAppBar from '../components/AppBar';
 
 interface FormData {
   email: string;
@@ -17,31 +12,12 @@ interface FormData {
 
 export default function LoginPage() {
   const { register, handleSubmit } = useForm<FormData>();
-  const navigate = useNavigate();
 
-  const hedlesignIn: SubmitHandler<FormData> = async data => {
-    try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-      navigate('/');
-      console.log('login feito com sucesso');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const hedleSignInGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-      navigate('/');
-      console.log('login fieto com sucesso');
-    } catch (error) {
-      console.log(error, 'error');
-    }
-  };
+  const { LoginGoogle, loginEmailAndPassword } = useAuth();
 
   return (
     <>
+      <MainAppBar />
       <Container maxWidth="xl" sx={{ height: '90vh' }}>
         <Box
           height="100%"
@@ -66,14 +42,13 @@ export default function LoginPage() {
               flexDirection="column"
               alignItems="initial"
               component="form"
-              onSubmit={handleSubmit(hedlesignIn)}
+              onSubmit={handleSubmit(loginEmailAndPassword)}
             >
               <TextField
                 {...register('email')}
                 label="Email"
                 color="primary"
                 type="email"
-                //defaultValue=""
                 variant="outlined"
                 size="medium"
                 sx={{
@@ -149,7 +124,7 @@ export default function LoginPage() {
                 startIcon={<FcGoogle />}
                 color="primary"
                 size="large"
-                onClick={hedleSignInGoogle}
+                onClick={LoginGoogle}
                 sx={{ width: '100%' }}
               >
                 Google
