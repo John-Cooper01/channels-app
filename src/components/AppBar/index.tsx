@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
-
-import AppBar from '@mui/material/AppBar';
 import {
   Container,
   Box,
@@ -17,6 +15,8 @@ import {
   Menu,
 } from '@mui/material';
 import { AiOutlineMenu } from 'react-icons/ai';
+import AppBar from '@mui/material/AppBar';
+import { useAuth } from '../../hooks/useAuth';
 
 const pages = ['Home', 'Entrar', 'Cadastrar'];
 const urls = ['/', '/login', '/register'];
@@ -52,9 +52,7 @@ export default function MainAppBar() {
     });
   }, [userData]);
 
-  const logout = () => {
-    return signOut(auth);
-  };
+  const { Logout } = useAuth();
 
   return (
     <AppBar position="static">
@@ -107,7 +105,7 @@ export default function MainAppBar() {
               ))}
               {userData ? (
                 <Tooltip title="Deseja mesmo sair ? :( ">
-                  <MenuItem onClick={logout}>
+                  <MenuItem onClick={Logout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Tooltip>
@@ -168,7 +166,7 @@ export default function MainAppBar() {
               </MenuItem>
               {userData ? (
                 <Tooltip title="Deseja mesmo sair ? :( ">
-                  <MenuItem onClick={logout}>
+                  <MenuItem onClick={Logout}>
                     <Typography textAlign="center">Logout</Typography>
                   </MenuItem>
                 </Tooltip>
