@@ -6,7 +6,7 @@ import { AiOutlineSend } from 'react-icons/ai';
 //import { useReduxSelector } from '../../hooks/useReduxSelector';
 import MessageItem from '../MessageItem';
 import { useChat } from '../../hooks/useChat';
-import { FormData } from './type';
+import { FormData } from './types';
 
 export default function Chat() {
   const { sendMessage } = useChat();
@@ -20,16 +20,16 @@ export default function Chat() {
     {
       id: 2,
       idUser: 121,
-      author: 'Jhonatas',
+      author: 'Silva',
       body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis rem corporis libero architecto officiis, voluptas perferendis, sit iste mollitia aliquid dolor sed placeat quos eius quia, esse repellat ipsam maiores!',
     },
     { id: 3, idUser: 122, author: 'joao', body: 'lorem' },
     { id: 4, idUser: 123, author: 'Guilherme', body: 'Hello' },
-    { id: 5, idUser: 124, author: 'Jhonatas', body: 'Hello' },
-    { id: 6, idUser: 124, author: 'Jhonatas', body: 'Hello' },
-    { id: 7, idUser: 124, author: 'Jhonatas', body: 'Hello' },
-    { id: 8, idUser: 124, author: 'Jhonatas', body: 'Hello' },
-    { id: 9, idUser: 124, author: 'Jhonatas', body: 'Hello' },
+    { id: 5, idUser: 124, author: 'Silva', body: 'Hello' },
+    { id: 6, idUser: 124, author: 'Silva', body: 'Hello' },
+    { id: 7, idUser: 124, author: 'Guh', body: 'Hello' },
+    { id: 8, idUser: 124, author: 'Jess', body: 'Hello' },
+    { id: 9, idUser: 124, author: 'Guh', body: 'Hello' },
   ]);
 
   const { register, handleSubmit } = useForm<FormData>();
