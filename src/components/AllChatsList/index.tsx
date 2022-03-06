@@ -1,34 +1,17 @@
-import { useEffect, useState } from 'react';
-import { db } from '../../utils/firebase';
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  onSnapshot,
-  doc,
-  getDoc,
-} from 'firebase/firestore';
-import { Box, Avatar, Typography, Divider } from '@mui/material';
-import { useChat } from '../../hooks/useChat';
+import { Box, Divider, Avatar, Typography } from '@mui/material';
+import { ChatItemsProps } from './types';
 
-interface ChatsListProps {
-  id: string;
-  name: string;
-}
-
-export default function ChatsList({ id, name }: ChatsListProps) {
-  const chatCollectionRef = collection(db, 'chat');
-  const chatRef = doc(chatCollectionRef, id);
-  const { handleChat } = useChat();
-
+export default function AllChatsList({ id, name }: ChatItemsProps) {
   return (
     <>
       <Box
         key={id}
         width="100%"
-        sx={{ '& :hover': { bgcolor: '#44484e' } }}
-        onClick={() => handleChat(id)}
+        sx={{
+          '& :hover': {
+            bgcolor: '#44484e',
+          },
+        }}
       >
         <Box
           height="5rem"

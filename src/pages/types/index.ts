@@ -14,3 +14,8 @@ export interface FormDataRegisterUser {
   email: string;
   password: string;
 }
+
+export interface ChatAllProps {
+  idChat: string;
+  name: string;
+}
