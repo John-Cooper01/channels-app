@@ -2,7 +2,7 @@ export interface listChatsProps {
   idChat: string;
   idUser: string;
   name: string;
-  index?: number;
+  date: string;
 }
 
 export interface FormDataChannel {
@@ -18,4 +18,10 @@ export interface FormDataRegisterUser {
 export interface ChatAllProps {
   idChat: string;
   name: string;
+  date: string;
+}
+
+export interface FormDataLoginPage {
+  email: string;
+  password: string;
 }

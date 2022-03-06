@@ -1,5 +1,5 @@
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
 
-import { ReduxStore } from '../../features/types';
+import { ReduxStore } from '../../store';
 
 export const useReduxSelector: TypedUseSelectorHook<ReduxStore> = useSelector;

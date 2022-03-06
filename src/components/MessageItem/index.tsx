@@ -1,30 +1,35 @@
 import { Box } from '@mui/material';
-//import { useReduxSelector } from '../../hooks/useReduxSelector';
+import { useReduxSelector } from '../../hooks/useReduxSelector';
+import { MessageItemProps } from './types';
 
-interface MessageItemProps {
-  idUser: number;
-  author: string;
-  body: string;
-}
 export default function MessageItem({
   author,
   body,
   idUser,
 }: MessageItemProps) {
-  // const { userId } = useReduxSelector(state => state.user);
-  const id = 12;
+  const {
+    user: { userInfo },
+  } = useReduxSelector(state => state);
+
   return (
     <Box
       display="flex"
-      justifyContent={id === idUser ? 'flex-end' : 'flex-start'}
-      sx={{}}
+      justifyContent={userInfo.id === idUser ? 'flex-end' : 'flex-start'}
     >
-      <Box maxWidth="60%" p={1} my={1} bgcolor="#44484e" borderRadius=".5rem">
+      <Box
+        maxWidth="60%"
+        p={1}
+        my={1}
+        display="flex"
+        flexDirection="column"
+        bgcolor="#44484e"
+        borderRadius=".5rem"
+      >
         <Box
-          textAlign={id === idUser ? 'end' : 'start'}
+          textAlign={userInfo.id === idUser ? 'end' : 'start'}
           fontSize="1.25rem"
           fontWeight="medium"
-          color={id === idUser ? '' : '#0269DA'}
+          color={userInfo.id === idUser ? '' : '#0269DA'}
         >
           {author}
         </Box>

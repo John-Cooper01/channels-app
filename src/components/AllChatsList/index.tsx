@@ -1,7 +1,9 @@
 import { Box, Divider, Avatar, Typography } from '@mui/material';
+import { useChat } from '../../hooks/useChat';
 import { ChatItemsProps } from './types';
 
-export default function AllChatsList({ id, name }: ChatItemsProps) {
+export default function AllChatsList({ id, name, date }: ChatItemsProps) {
+  const { handleChatAll } = useChat();
   return (
     <>
       <Box
@@ -19,10 +21,11 @@ export default function AllChatsList({ id, name }: ChatItemsProps) {
           display="flex"
           alignItems="center"
           sx={{ cursor: 'pointer' }}
+          onClick={() => handleChatAll(id)}
         >
           <Avatar
             alt={name}
-            src="/images/jhonatas3.jpg"
+            src="/images/null.jpg"
             sx={{ width: '3.125rem', height: '3.125rem' }}
           />
           <Box ml={2} display="flex" flexDirection="column">
@@ -35,13 +38,12 @@ export default function AllChatsList({ id, name }: ChatItemsProps) {
               fontWeight="medium"
               component="span"
             >
-              Ok, entao.
+              {date}
             </Typography>
           </Box>
         </Box>
         <Divider
           sx={{
-            ml: '80px',
             borderColor: '#78909c',
           }}
         />

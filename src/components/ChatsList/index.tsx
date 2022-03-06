@@ -1,14 +1,27 @@
+import { db } from '../../utils/firebase';
+import { collection, doc } from 'firebase/firestore';
 import { Box, Avatar, Typography, Divider } from '@mui/material';
+import { useChat } from '../../hooks/useChat';
 
 interface ChatsListProps {
   id: string;
   name: string;
+  date: any;
 }
 
-export default function ChatsList({ id, name }: ChatsListProps) {
+export default function ChatsList({ id, name, date }: ChatsListProps) {
+  const chatCollectionRef = collection(db, 'chat');
+  const chatRef = doc(chatCollectionRef, id);
+  const { handleChat } = useChat();
+
   return (
     <>
-      <Box key={id} width="100%" sx={{ '& :hover': { bgcolor: '#44484e' } }}>
+      <Box
+        key={id}
+        width="100%"
+        sx={{ '& :hover': { bgcolor: '#44484e' } }}
+        onClick={() => handleChat(id)}
+      >
         <Box
           height="5rem"
           px={2}
@@ -31,7 +44,7 @@ export default function ChatsList({ id, name }: ChatsListProps) {
               fontWeight="medium"
               component="span"
             >
-              Ok, entao.
+              {date}
             </Typography>
           </Box>
         </Box>

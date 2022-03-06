@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -12,17 +11,13 @@ import { auth } from '../../utils/firebase';
 import { db } from '../../utils/firebase';
 import { collection, doc, addDoc, setDoc } from 'firebase/firestore';
 import { SubmitHandler } from 'react-hook-form';
-import {
-  isInfo,
-  isLogin,
-  isLogout,
-} from '../../features/featureUser/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { isInfo, isLogin, isLogout } from '../../store/user/userSlice';
 import { useReduxDispatch } from '../useReduxDispath';
 import { FormDataRegisterUser, FormData } from './types';
 
 export function useAuth() {
   const userDocRef = collection(db, 'users');
-  //const { isAuth } = useReduxSelector(state => state.user);
   const dispatch = useReduxDispatch();
   const navigate = useNavigate();
 
@@ -95,8 +90,8 @@ export function useAuth() {
     onAuthStateChanged(auth, user => {
       if (user) {
         const userId = user.uid;
-        //const userEmail = user.email;
-        dispatch(isInfo(userId));
+        const userEmail = user.email;
+        dispatch(isInfo({ id: userId, email: userEmail }));
       }
     });
     return () => {
