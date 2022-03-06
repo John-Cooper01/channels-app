@@ -1,18 +1,16 @@
 import { Box } from '@mui/material';
-//import { useReduxSelector } from '../../hooks/useReduxSelector';
 
 interface MessageItemProps {
-  idUser: number;
-  author: string;
-  body: string;
+  idUser?: number;
+  author?: string;
+  body?: string;
 }
 export default function MessageItem({
   author,
   body,
   idUser,
 }: MessageItemProps) {
-  // const { userId } = useReduxSelector(state => state.user);
-  const id = 12;
+  const id = 1;
   return (
     <Box
       display="flex"
