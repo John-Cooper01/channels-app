@@ -1,17 +1,8 @@
-import { db } from '../../utils/firebase';
-import { collection, doc } from 'firebase/firestore';
 import { Box, Avatar, Typography, Divider } from '@mui/material';
 import { useChat } from '../../hooks/useChat';
-
-interface ChatsListProps {
-  id: string;
-  name: string;
-  date: any;
-}
+import { ChatsListProps } from './types';
 
 export default function ChatsList({ id, name, date }: ChatsListProps) {
-  const chatCollectionRef = collection(db, 'chat');
-  //const chatRef = doc(chatCollectionRef, id);
   const { handleChat } = useChat();
 
   return (
