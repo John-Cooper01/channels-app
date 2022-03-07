@@ -4,20 +4,17 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     isAuth: false,
-    userId: '',
-    // userEmail: '',
+    userInfo: { id: '', email: '' },
   },
   reducers: {
     isInfo(state, { payload }) {
-      return { isAuth: true, userId: payload };
+      return { isAuth: true, userInfo: payload };
     },
     isLogin(state, { payload }) {
-      //return { ...state, isAuth: true };
-      return { isAuth: payload, userId: payload };
+      return { isAuth: payload, userInfo: state.userInfo };
     },
     isLogout(state, { payload }) {
-      //return { ...state, isAuth: false };
-      return { isAuth: payload, userId: payload };
+      return { isAuth: payload, userInfo: state.userInfo };
     },
   },
 });

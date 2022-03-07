@@ -4,7 +4,7 @@ const chatSlice = createSlice({
   name: 'chat',
   initialState: {
     statusCreate: false,
-    chatMessage: [{ chatName: '', messages: Array<string>() }],
+    chatMessage: { id: '', uid: '', chatName: '', messages: [''] },
   },
   reducers: {
     isCreateChat(state, { payload }) {
