@@ -8,7 +8,6 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  Button,
   MenuItem,
   Tooltip,
   Avatar,
@@ -18,8 +17,8 @@ import { AiOutlineMenu } from 'react-icons/ai';
 import AppBar from '@mui/material/AppBar';
 import { useAuth } from '../../hooks/useAuth';
 
-const pages = ['Home', 'Entrar', 'Cadastrar'];
-const urls = ['/', '/login', '/register'];
+const pages = [''];
+const urls = ['/'];
 
 export default function MainAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -99,7 +98,14 @@ export default function MainAppBar() {
               {pages.map(page => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Link to={urls[pages.indexOf(page)]}>
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography
+                      variant="h6"
+                      noWrap
+                      component="div"
+                      textAlign="center"
+                    >
+                      {page}
+                    </Typography>
                   </Link>
                 </MenuItem>
               ))}
@@ -114,6 +120,7 @@ export default function MainAppBar() {
               )}
             </Menu>
           </Box>
+
           <Typography
             variant="h6"
             noWrap
@@ -123,18 +130,7 @@ export default function MainAppBar() {
             ChannelsDEVS
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map(page => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                href={urls[pages.indexOf(page)]}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Menu">
