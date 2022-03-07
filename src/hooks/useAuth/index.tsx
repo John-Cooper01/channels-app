@@ -28,8 +28,7 @@ export function useAuth() {
         data.email,
         data.password,
       );
-
-      //const userDoc = await collection(db, 'users');
+      navigate('/login');
 
       await addDoc(userDocRef, {
         name: data.username,
@@ -76,14 +75,17 @@ export function useAuth() {
   };
 
   const Logout = async () => {
-    signOut(auth)
-      .then(() => {
-        dispatch(isLogout(false));
-        navigate('/login');
-      })
-      .catch(error => {
-        console.log(error, 'error');
-      });
+    await signOut(auth);
+    dispatch(isLogout(false));
+    navigate('/login');
+    // signOut(auth)
+    //   .then(() => {
+    //     dispatch(isLogout(false));
+    //     navigate('/login');
+    //   })
+    //   .catch(error => {
+    //     console.log(error, 'error');
+    //   });
   };
 
   useEffect(() => {
@@ -94,10 +96,7 @@ export function useAuth() {
         dispatch(isInfo({ id: userId, email: userEmail }));
       }
     });
-    return () => {
-      console.log('Usuario offline');
-    };
-  }, []);
+  }, [auth]);
 
   return { registerUser, loginEmailAndPassword, LoginGoogle, Logout };
 }

@@ -23,7 +23,8 @@ export default function MessageItem({
         my={1}
         display="flex"
         flexDirection="column"
-        bgcolor="#44484e"
+        bgcolor={userInfo.id === idUser ? '#3C4E69' : '#44484e'}
+        //#3C4E69
         borderRadius=".5rem"
       >
         <Box

@@ -20,11 +20,11 @@ import {
 import { db } from '../../utils/firebase';
 
 export default function Chat() {
-  const { sendMessage } = useChat();
   const [message, setMessages] = useState<DocumentData[]>([]);
-  const { chatMessage } = useReduxSelector(state => state.chat);
   const { register, handleSubmit } = useForm<FormData>();
+  const { chatMessage } = useReduxSelector(state => state.chat);
   const messagesCollectionRef = collection(db, 'messages');
+  const { sendMessage } = useChat();
 
   const queryChatsE = query(
     messagesCollectionRef,
@@ -136,7 +136,11 @@ export default function Chat() {
             placeholder="Mensagem"
           />
 
-          <IconButton color="secondary" component="span">
+          <IconButton
+            color="secondary"
+            component="span"
+            onClick={handleSubmit(sendMessage)}
+          >
             <AiOutlineSend />
           </IconButton>
         </Box>

@@ -1,9 +1,9 @@
 import { Container, Box, TextField, Divider } from '@mui/material';
 import ButtonStyle from '../components/Button';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../hooks/useAuth';
-import MainAppBar from '../components/AppBar';
 import { FormDataLoginPage } from './types';
 
 export default function LoginPage() {
@@ -13,8 +13,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <MainAppBar />
-
       <Container maxWidth="xl" sx={{ height: '90vh' }}>
         <Box
           height="100%"
@@ -97,7 +95,22 @@ export default function LoginPage() {
               >
                 Entrar
               </ButtonStyle>
-
+              <Box
+                mt={3}
+                textAlign="center"
+                sx={{
+                  '& a': {
+                    textDecoration: 'none',
+                    fontWeight: 'bold',
+                    color: '#014998',
+                    '&:hover': {
+                      color: '#3487e1',
+                    },
+                  },
+                }}
+              >
+                Não tem uma conta? <Link to="/cadastrar">Registre-se</Link>
+              </Box>
               <Divider
                 light={true}
                 sx={{

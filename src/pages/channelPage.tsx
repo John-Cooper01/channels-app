@@ -64,7 +64,7 @@ export default function ChannelPage() {
       }
     };
     busca();
-  }, [isAuth, statusCreate]);
+  }, [isAuth, statusCreate, open]);
 
   useEffect(() => {
     const buscaAll = async () => {
@@ -171,7 +171,11 @@ export default function ChannelPage() {
                 placeholder="Criar novo canal"
               />
               <Tooltip title="Crier um canal">
-                <IconButton color="primary" component="span">
+                <IconButton
+                  color="primary"
+                  component="span"
+                  onClick={handleSubmit(createChat)}
+                >
                   <BiMessageSquareAdd />
                 </IconButton>
               </Tooltip>
