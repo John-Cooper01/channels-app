@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
 import { db } from '../utils/firebase';
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  onSnapshot,
-} from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import { useReduxSelector } from '../hooks/useReduxSelector';
+import { formatRelative } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 import { Box, Container, Divider, Avatar, IconButton } from '@mui/material';
 import { BiMessageSquareAdd } from 'react-icons/bi';
@@ -26,17 +22,17 @@ export default function ChannelPage() {
   const [chats, setChats] = useState<listChatsProps[]>([]);
   const [open, setOpen] = useState(false);
   const { register, handleSubmit } = useForm<FormDataChannel>();
-  const { userId, isAuth } = useReduxSelector(state => state.user);
+  const { userInfo, isAuth } = useReduxSelector(state => state.user);
   const { statusCreate } = useReduxSelector(state => state.chat);
   const chatCollectionRef = collection(db, 'chat');
   const { createChat } = useChat();
 
   useEffect(() => {
     const busca = async () => {
-      if (userId) {
+      if (userInfo.id) {
         const queryChats = await query(
           chatCollectionRef,
-          where('usersId', 'array-contains', userId),
+          where('usersId', 'array-contains', userInfo.id),
         );
         const querySnapshot = await getDocs(queryChats);
 
@@ -44,9 +40,15 @@ export default function ChannelPage() {
         querySnapshot.forEach(doc => {
           const data = doc.data();
           listChats.push({
+            ...data,
             idChat: doc.id,
             idUser: data.userId,
             name: data.name,
+            date: formatRelative(
+              new Date(data.createdUp.toDate()),
+              new Date(),
+              { locale: ptBR },
+            ),
           });
         });
         setChats(listChats);
@@ -60,24 +62,32 @@ export default function ChannelPage() {
   useEffect(() => {
     const buscaAll = async () => {
       try {
-        const listChats: ChatAllProps[] = [];
-        await onSnapshot(chatCollectionRef, spnapshot => {
-          console.log('ok');
-          spnapshot.docs.map(doc => {
-            const data = doc.data();
-            listChats.push({
-              idChat: doc.id,
-              name: data.name,
-            });
+        const queryChats = await query(chatCollectionRef);
+        const querySnapshot = await getDocs(queryChats);
+
+        const listChats: listChatsProps[] = [];
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          listChats.push({
+            ...data,
+            idChat: doc.id,
+            idUser: data.userId,
+            name: data.name,
+            date: formatRelative(
+              new Date(data.createdUp.toDate()),
+              new Date(),
+              { locale: ptBR },
+            ),
           });
+          console.log(data.createdUp.toDate(), 'oi');
         });
         setChatAll(listChats);
       } catch (error) {
-        console.log('Error em buscas todos os chat');
+        console.log('Error em buscas todos os chat', error);
       }
     };
     buscaAll();
-  }, [statusCreate]);
+  }, [statusCreate, open]);
 
   const handleDrawer = () => {
     setOpen(true);
@@ -177,6 +187,7 @@ export default function ChannelPage() {
                   key={chat.idChat}
                   id={chat.idChat}
                   name={chat.name}
+                  date={chat.date}
                 />
               ))}
             </Box>
@@ -201,7 +212,12 @@ export default function ChannelPage() {
         }}
       >
         {chatAll.map((chat: ChatAllProps) => (
-          <AllChatsList key={chat.idChat} id={chat.idChat} name={chat.name} />
+          <AllChatsList
+            key={chat.idChat}
+            id={chat.idChat}
+            name={chat.name}
+            date={chat.date}
+          />
         ))}
       </Drawer>
     </>

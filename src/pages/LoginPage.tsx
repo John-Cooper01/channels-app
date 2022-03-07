@@ -4,14 +4,10 @@ import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../hooks/useAuth';
 import MainAppBar from '../components/AppBar';
-
-interface FormData {
-  email: string;
-  password: string;
-}
+import { FormDataLoginPage } from './types';
 
 export default function LoginPage() {
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit } = useForm<FormDataLoginPage>();
 
   const { LoginGoogle, loginEmailAndPassword } = useAuth();
 
@@ -73,7 +69,6 @@ export default function LoginPage() {
                 label="password"
                 color="primary"
                 type="password"
-                //defaultValue=""
                 variant="outlined"
                 size="medium"
                 sx={{
