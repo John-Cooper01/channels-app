@@ -6,6 +6,9 @@ Este projeto visa a implementar a criação de chats e envio de mensagens.
 
 - React JS
 - TypeScript 💙
+- Commitlint
+- Eslint
+- Prettier
 - Redux Toolkit
 - Firebase
 - React Router Dom
