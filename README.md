@@ -1,14 +1,13 @@
 # ChannelsDevs
 
-This project aims to implement a url shortener.
+Este projeto visa a implementar a criação de chats e envio de mensagens.
 
 ## Tools
 
 - React JS
 - TypeScript 💙
-- React Toolkit
+- Redux Toolkit
 - Firebase
-- Docker & Docker Compose (Setup environment)
 - React Router Dom
 - React Hook Form
 - Date Fns
@@ -28,12 +27,6 @@ yarn
 ```
 
 After configs, you can start the server with:
-
-```sh
-docker-compose up -d --build
-```
-
-or
 
 ```sh
 yarn start
