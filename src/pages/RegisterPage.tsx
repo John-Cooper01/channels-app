@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { Container, Box, TextField, Divider } from '@mui/material';
 import { FcGoogle } from 'react-icons/fc';
 import ButtonStyle from '../components/Button';
-import MainAppBar from '../components/AppBar';
 import { useAuth } from '../hooks/useAuth';
 import { FormDataRegisterUser } from './types';
 
