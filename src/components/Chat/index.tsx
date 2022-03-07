@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { formatRelative } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 import { AiOutlineSend } from 'react-icons/ai';
 import { useReduxSelector } from '../../hooks/useReduxSelector';
 import MessageItem from '../MessageItem';
@@ -19,11 +21,8 @@ import { db } from '../../utils/firebase';
 
 export default function Chat() {
   const { sendMessage } = useChat();
-
   const [message, setMessages] = useState<DocumentData[]>([]);
-
   const { chatMessage } = useReduxSelector(state => state.chat);
-
   const { register, handleSubmit } = useForm<FormData>();
   const messagesCollectionRef = collection(db, 'messages');
 
@@ -31,7 +30,6 @@ export default function Chat() {
     messagesCollectionRef,
     where('chatId', '==', chatMessage.id),
   );
-
   const querySnapshot = getDocs(queryChatsE);
 
   useEffect(() => {
@@ -46,7 +44,16 @@ export default function Chat() {
       const messagesForEach: DocumentData[] = [];
       querySnapshot.forEach(item => {
         const data = item.data();
-        messagesForEach.push(data);
+        messagesForEach.push({
+          ...data,
+          idMsg: data.uid,
+          idUser: data.userId,
+          author: data.username,
+          message: data.message,
+          date: formatRelative(new Date(data.createdUp.toDate()), new Date(), {
+            locale: ptBR,
+          }),
+        });
       });
       setMessages(messagesForEach);
     }
@@ -64,7 +71,9 @@ export default function Chat() {
           alignItems="center"
           bgcolor="#44484e"
         >
-          <h1>{chatMessage.chatName}</h1>
+          <Typography component="h1" fontSize="2rem" fontWeight="medium">
+            {chatMessage.chatName}
+          </Typography>
         </Box>
 
         <Box
@@ -85,9 +94,10 @@ export default function Chat() {
         >
           {message.map(item => (
             <MessageItem
-              key={item.createdUp}
-              idUser={item.userId}
+              key={item.idMsg}
+              idUser={item.idUser}
               author={item.username}
+              date={item.date}
               body={item.message}
             />
           ))}
@@ -99,6 +109,8 @@ export default function Chat() {
           display="flex"
           alignItems="center"
           bgcolor="#44484e"
+          component="form"
+          onSubmit={handleSubmit(sendMessage)}
           sx={{
             '& input': {
               width: '100%',
@@ -124,11 +136,7 @@ export default function Chat() {
             placeholder="Mensagem"
           />
 
-          <IconButton
-            color="primary"
-            component="span"
-            onClick={handleSubmit(sendMessage)}
-          >
+          <IconButton color="secondary" component="span">
             <AiOutlineSend />
           </IconButton>
         </Box>

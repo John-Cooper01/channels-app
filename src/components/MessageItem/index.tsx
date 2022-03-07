@@ -6,6 +6,7 @@ export default function MessageItem({
   author,
   body,
   idUser,
+  date,
 }: MessageItemProps) {
   const {
     user: { userInfo },
@@ -27,13 +28,19 @@ export default function MessageItem({
       >
         <Box
           textAlign={userInfo.id === idUser ? 'end' : 'start'}
-          fontSize="1.25rem"
+          fontSize=".8rem"
           fontWeight="medium"
-          color={userInfo.id === idUser ? '' : '#0269DA'}
+          color={userInfo.id === idUser ? 'white' : '#029BF6'}
+          sx={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
         >
           {author}
         </Box>
-        <Box fontSize=".875rem"> {body} </Box>
+        <Box py={0.6} fontSize=".8875rem" lineHeight="1.1875rem">
+          {body}
+        </Box>
+        <Box mt={-1} textAlign="end" fontSize=".700rem">
+          {date}
+        </Box>
       </Box>
     </Box>
   );

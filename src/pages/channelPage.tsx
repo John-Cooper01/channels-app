@@ -6,9 +6,16 @@ import { useReduxSelector } from '../hooks/useReduxSelector';
 import { formatRelative } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { Box, Container, Divider, Avatar, IconButton } from '@mui/material';
+import {
+  Box,
+  Container,
+  Divider,
+  Avatar,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
 import { BiMessageSquareAdd } from 'react-icons/bi';
-import { TiThListOutline } from 'react-icons/ti';
+import { VscCommentDiscussion } from 'react-icons/vsc';
 import MainAppBar from '../components/AppBar';
 import ChatsList from '../components/ChatsList';
 import Chat from '../components/Chat';
@@ -79,7 +86,6 @@ export default function ChannelPage() {
               { locale: ptBR },
             ),
           });
-          console.log(data.createdUp.toDate(), 'oi');
         });
         setChatAll(listChats);
       } catch (error) {
@@ -118,20 +124,24 @@ export default function ChannelPage() {
                 src="/images/none.jpg"
                 sx={{ width: '3.125rem', height: '3.125rem' }}
               />
-              <IconButton
-                color="primary"
-                component="span"
-                onClick={handleDrawer}
-                sx={{ '& svg': { height: '2rem', width: '2rem' } }}
-              >
-                <TiThListOutline />
-              </IconButton>
+              <Tooltip title="Encontre outros canais">
+                <IconButton
+                  color="primary"
+                  component="span"
+                  onClick={handleDrawer}
+                  sx={{ '& svg': { height: '2rem', width: '2rem' } }}
+                >
+                  <VscCommentDiscussion />
+                </IconButton>
+              </Tooltip>
             </Box>
 
             <Box
               my={2}
               display="flex"
               alignItems="center"
+              component="form"
+              onSubmit={handleSubmit(createChat)}
               sx={{
                 '& input': {
                   width: '100%',
@@ -158,16 +168,13 @@ export default function ChannelPage() {
                 {...register('nameChat', { required: true })}
                 autoComplete="off"
                 type="text"
-                placeholder="Criar novo grupo"
+                placeholder="Criar novo canal"
               />
-
-              <IconButton
-                color="primary"
-                component="span"
-                onClick={handleSubmit(createChat)}
-              >
-                <BiMessageSquareAdd />
-              </IconButton>
+              <Tooltip title="Crier um canal">
+                <IconButton color="primary" component="span">
+                  <BiMessageSquareAdd />
+                </IconButton>
+              </Tooltip>
             </Box>
 
             <Box
@@ -211,6 +218,14 @@ export default function ChannelPage() {
           setOpen(false);
         }}
       >
+        <Box
+          textAlign="center"
+          color="white"
+          fontSize="2rem"
+          fontWeight="medium"
+        >
+          Todos os Canais
+        </Box>
         {chatAll.map((chat: ChatAllProps) => (
           <AllChatsList
             key={chat.idChat}

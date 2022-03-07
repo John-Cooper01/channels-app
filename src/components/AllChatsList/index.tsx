@@ -7,7 +7,6 @@ export default function AllChatsList({ id, name, date }: ChatItemsProps) {
   return (
     <>
       <Box
-        key={id}
         width="100%"
         sx={{
           '& :hover': {
@@ -16,6 +15,7 @@ export default function AllChatsList({ id, name, date }: ChatItemsProps) {
         }}
       >
         <Box
+          key={id}
           height="5rem"
           px={2}
           display="flex"
