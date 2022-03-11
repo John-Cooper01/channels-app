@@ -78,14 +78,6 @@ export function useAuth() {
     await signOut(auth);
     dispatch(isLogout(false));
     navigate('/login');
-    // signOut(auth)
-    //   .then(() => {
-    //     dispatch(isLogout(false));
-    //     navigate('/login');
-    //   })
-    //   .catch(error => {
-    //     console.log(error, 'error');
-    //   });
   };
 
   useEffect(() => {
