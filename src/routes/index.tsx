@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useReduxSelector } from '../hooks/useReduxSelector';
 import ChannelPage from '../pages/channelPage';
@@ -13,6 +12,7 @@ export default function MainRoutes() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/cadastrar" element={<RegisterPage />} />
+
       <Route element={<PrivateRoute isAuth={isAuth} />}>
         <Route path="/" element={<ChannelPage />} />
       </Route>

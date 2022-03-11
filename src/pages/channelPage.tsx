@@ -20,13 +20,18 @@ import MainAppBar from '../components/AppBar';
 import ChatsList from '../components/ChatsList';
 import Chat from '../components/Chat';
 import { useChat } from '../hooks/useChat';
-import { FormDataChannel, listChatsProps, ChatAllProps } from './types';
+import {
+  FormDataChannel,
+  listChatsProps,
+  ChatAllProps,
+  listChats,
+} from './types';
 import Drawer from '../components/Drawer';
 import AllChatsList from '../components/AllChatsList';
 
 export default function ChannelPage() {
   const [chatAll, setChatAll] = useState<ChatAllProps[]>([]);
-  const [chats, setChats] = useState<listChatsProps[]>([]);
+  const [chats, setChats] = useState<listChats[]>([]);
   const [open, setOpen] = useState(false);
   const { register, handleSubmit } = useForm<FormDataChannel>();
   const { userInfo, isAuth } = useReduxSelector(state => state.user);
@@ -43,7 +48,7 @@ export default function ChannelPage() {
         );
         const querySnapshot = await getDocs(queryChats);
 
-        const listChats: listChatsProps[] = [];
+        const listChats: listChats[] = [];
         querySnapshot.forEach(doc => {
           const data = doc.data();
           listChats.push({
@@ -80,11 +85,6 @@ export default function ChannelPage() {
             idChat: doc.id,
             idUser: data.userId,
             name: data.name,
-            date: formatRelative(
-              new Date(data.createdUp.toDate()),
-              new Date(),
-              { locale: ptBR },
-            ),
           });
         });
         setChatAll(listChats);
@@ -188,12 +188,12 @@ export default function ChannelPage() {
                 '&::-webkit-scrollbar': { width: '0.4rem' },
                 '&::-webkit-scrollbar-track': { background: '#434F5C' },
                 '&::-webkit-scrollbar-thumb': {
-                  background: '#0269DA ',
+                  background: '#0269DA',
                   borderRadius: '0.2rem',
                 },
               }}
             >
-              {chats.map((chat: listChatsProps) => (
+              {chats.map((chat: listChats) => (
                 <ChatsList
                   key={chat.idChat}
                   id={chat.idChat}
@@ -231,12 +231,7 @@ export default function ChannelPage() {
           Todos os Canais
         </Box>
         {chatAll.map((chat: ChatAllProps) => (
-          <AllChatsList
-            key={chat.idChat}
-            id={chat.idChat}
-            name={chat.name}
-            date={chat.date}
-          />
+          <AllChatsList key={chat.idChat} id={chat.idChat} name={chat.name} />
         ))}
       </Drawer>
     </>

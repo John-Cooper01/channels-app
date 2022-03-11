@@ -2,6 +2,9 @@ export interface listChatsProps {
   idChat: string;
   idUser: string;
   name: string;
+}
+
+export interface listChats extends listChatsProps {
   date: string;
 }
 
@@ -18,7 +21,6 @@ export interface FormDataRegisterUser {
 export interface ChatAllProps {
   idChat: string;
   name: string;
-  date: string;
 }
 
 export interface FormDataLoginPage {
