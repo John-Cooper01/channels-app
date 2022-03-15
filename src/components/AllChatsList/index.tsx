@@ -2,7 +2,7 @@ import { Box, Divider, Avatar, Typography } from '@mui/material';
 import { useChat } from '../../hooks/useChat';
 import { ChatItemsProps } from './types';
 
-export default function AllChatsList({ id, name, date }: ChatItemsProps) {
+export default function AllChatsList({ id, name }: ChatItemsProps) {
   const { handleChatAll } = useChat();
   return (
     <>
@@ -29,16 +29,8 @@ export default function AllChatsList({ id, name, date }: ChatItemsProps) {
             sx={{ width: '3.125rem', height: '3.125rem' }}
           />
           <Box ml={2} display="flex" flexDirection="column">
-            <Typography fontSize="1rem" component="span">
+            <Typography fontSize="1.25rem" component="span">
               {name}
-            </Typography>
-            <Typography
-              color="text.secondary"
-              fontSize=".875rem"
-              fontWeight="medium"
-              component="span"
-            >
-              {date}
             </Typography>
           </Box>
         </Box>

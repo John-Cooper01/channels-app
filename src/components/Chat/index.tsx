@@ -21,7 +21,7 @@ import { db } from '../../utils/firebase';
 
 export default function Chat() {
   const [message, setMessages] = useState<DocumentData[]>([]);
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, reset, formState } = useForm<FormData>();
   const { chatMessage } = useReduxSelector(state => state.chat);
   const messagesCollectionRef = collection(db, 'messages');
   const { sendMessage } = useChat();
@@ -59,6 +59,12 @@ export default function Chat() {
     }
     QueryChats();
   }, [chatMessage.uid, querySnapshot]);
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({ body: '' });
+    }
+  }, [formState, reset]);
 
   return (
     <>
