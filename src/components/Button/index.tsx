@@ -1,14 +1,6 @@
 import React from 'react';
-import Button, {
-  ButtonProps as MaterialButtonProps,
-} from '@mui/material/Button';
-
-interface ButtonProps extends MaterialButtonProps {
-  children?: React.ReactNode;
-  variant: 'contained' | 'outlined';
-  color: 'primary' | 'secondary' | 'error';
-  size?: 'small' | 'medium' | 'large';
-}
+import Button from '@mui/material/Button';
+import { ButtonProps } from './types';
 
 export default function ButtonStyle({
   children,
