@@ -37,8 +37,6 @@ export function useChat() {
             usersId: [user.uid],
           });
           dispatch(isCreateChat(true));
-        } else {
-          console.log('error');
         }
       });
       dispatch(isCreateChat(false));
