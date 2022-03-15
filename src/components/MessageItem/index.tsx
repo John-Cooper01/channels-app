@@ -39,7 +39,7 @@ export default function MessageItem({
         <Box py={0.6} fontSize=".8875rem" lineHeight="1.1875rem">
           {body}
         </Box>
-        <Box mt={-1} textAlign="end" fontSize=".700rem">
+        <Box textAlign="end" fontSize=".700rem">
           {date}
         </Box>
       </Box>
