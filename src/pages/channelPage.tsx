@@ -33,7 +33,8 @@ export default function ChannelPage() {
   const [chatAll, setChatAll] = useState<ChatAllProps[]>([]);
   const [chats, setChats] = useState<listChats[]>([]);
   const [open, setOpen] = useState(false);
-  const { register, handleSubmit } = useForm<FormDataChannel>();
+  const { register, handleSubmit, reset, formState } =
+    useForm<FormDataChannel>();
   const { userInfo, isAuth } = useReduxSelector(state => state.user);
   const { statusCreate } = useReduxSelector(state => state.chat);
   const chatCollectionRef = collection(db, 'chat');
@@ -94,6 +95,12 @@ export default function ChannelPage() {
     };
     buscaAll();
   }, [statusCreate, open]);
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({ createChannel: '' });
+    }
+  }, [formState, reset]);
 
   const handleDrawer = () => {
     setOpen(true);
@@ -165,7 +172,7 @@ export default function ChannelPage() {
               }}
             >
               <input
-                {...register('nameChat', { required: true })}
+                {...register('createChannel', { required: true })}
                 autoComplete="off"
                 type="text"
                 placeholder="Criar novo canal"

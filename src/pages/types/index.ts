@@ -9,7 +9,7 @@ export interface listChats extends listChatsProps {
 }
 
 export interface FormDataChannel {
-  nameChat: string;
+  createChannel: string;
 }
 
 export interface FormDataRegisterUser {

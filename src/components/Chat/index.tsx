@@ -1,4 +1,12 @@
 import { useEffect, useState } from 'react';
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  DocumentData,
+} from 'firebase/firestore';
+import { db } from '../../utils/firebase';
 import { useForm } from 'react-hook-form';
 import { formatRelative } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -9,62 +17,52 @@ import { useReduxSelector } from '../../hooks/useReduxSelector';
 import MessageItem from '../MessageItem';
 import { useChat } from '../../hooks/useChat';
 import { FormData } from './types';
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  DocumentData,
-} from 'firebase/firestore';
-import { db } from '../../utils/firebase';
 
 export default function Chat() {
   const [message, setMessages] = useState<DocumentData[]>([]);
   const { register, handleSubmit, reset, formState } = useForm<FormData>();
   const { chatMessage } = useReduxSelector(state => state.chat);
-  const messagesCollectionRef = collection(db, 'messages');
+  const chatCollectionRef = collection(db, 'chat');
   const { sendMessage } = useChat();
-
-  const queryChatsE = query(
-    messagesCollectionRef,
-    where('chatId', '==', chatMessage.id),
-  );
-  const querySnapshot = getDocs(queryChatsE);
-
-  useEffect(() => {
-    async function QueryChats() {
-      const queryChats = await query(
-        messagesCollectionRef,
-        where('chatId', '==', chatMessage.id),
-        orderBy('createdUp', 'asc'),
-      );
-
-      const querySnapshot = await getDocs(queryChats);
-      const messagesForEach: DocumentData[] = [];
-      querySnapshot.forEach(item => {
-        const data = item.data();
-        messagesForEach.push({
-          ...data,
-          idMsg: data.uid,
-          idUser: data.userId,
-          author: data.username,
-          message: data.message,
-          date: formatRelative(new Date(data.createdUp.toDate()), new Date(), {
-            locale: ptBR,
-          }),
-        });
-      });
-      setMessages(messagesForEach);
-    }
-    QueryChats();
-  }, [chatMessage.uid, querySnapshot]);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
       reset({ body: '' });
     }
   }, [formState, reset]);
+
+  useEffect(() => {
+    async function QueryChats() {
+      const queryChats = await query(
+        chatCollectionRef,
+        where('uid', '==', chatMessage.uid),
+      );
+
+      const querySnapshot = await getDocs(queryChats);
+
+      querySnapshot.forEach(item => {
+        const data = item.data();
+        const response = data.messages.map((item: DocumentData) => {
+          return {
+            ...item,
+            idMessege: item.uid,
+            idUser: item.userId,
+            username: item.username,
+            message: item.message,
+            createdUp: formatRelative(
+              new Date(item.createdUp.toDate()),
+              new Date(),
+              {
+                locale: ptBR,
+              },
+            ),
+          };
+        });
+        setMessages(response);
+      });
+    }
+    QueryChats();
+  }, [chatMessage.uid, sendMessage]);
 
   return (
     <>
@@ -100,10 +98,10 @@ export default function Chat() {
         >
           {message.map(item => (
             <MessageItem
-              key={item.idMsg}
+              key={item.idMessege}
               idUser={item.idUser}
               author={item.username}
-              date={item.date}
+              date={item.createdUp}
               body={item.message}
             />
           ))}

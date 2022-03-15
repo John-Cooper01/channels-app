@@ -24,7 +24,6 @@ export default function MessageItem({
         display="flex"
         flexDirection="column"
         bgcolor={userInfo.id === idUser ? '#3C4E69' : '#44484e'}
-        //#3C4E69
         borderRadius=".5rem"
       >
         <Box
@@ -39,7 +38,7 @@ export default function MessageItem({
         <Box py={0.6} fontSize=".8875rem" lineHeight="1.1875rem">
           {body}
         </Box>
-        <Box mt={-1} textAlign="end" fontSize=".700rem">
+        <Box textAlign="end" fontSize=".700rem">
           {date}
         </Box>
       </Box>
