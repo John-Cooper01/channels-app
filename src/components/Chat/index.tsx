@@ -12,6 +12,7 @@ import { formatRelative } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { Box, IconButton, Typography } from '@mui/material';
+import { Input } from '../InputBase';
 import { AiOutlineSend } from 'react-icons/ai';
 import { useReduxSelector } from '../../hooks/useReduxSelector';
 import MessageItem from '../MessageItem';
@@ -116,15 +117,6 @@ export default function Chat() {
           component="form"
           onSubmit={handleSubmit(sendMessage)}
           sx={{
-            '& input': {
-              width: '100%',
-              height: '2.2rem',
-              px: 1,
-              borderRadius: '.3rem',
-              fontSize: '1.25rem',
-              border: 'none',
-              outline: 'none',
-            },
             '& svg': {
               width: '2rem',
               height: '2rem',
@@ -133,11 +125,14 @@ export default function Chat() {
             },
           }}
         >
-          <input
+          <Input
             {...register('body', { required: true })}
-            autoComplete="off"
+            label="Mensagem"
+            color="primary"
             type="text"
-            placeholder="Mensagem"
+            size="small"
+            width={{ xs: '100%', md: '100%' }}
+            autoComplete="off"
           />
 
           <IconButton
