@@ -17,6 +17,7 @@ import {
 import { BiMessageSquareAdd } from 'react-icons/bi';
 import { VscCommentDiscussion } from 'react-icons/vsc';
 import MainAppBar from '../components/AppBar';
+import { Input } from '../components/InputBase';
 import ChatsList from '../components/ChatsList';
 import Chat from '../components/Chat';
 import { useChat } from '../hooks/useChat';
@@ -150,19 +151,6 @@ export default function ChannelPage() {
               component="form"
               onSubmit={handleSubmit(createChat)}
               sx={{
-                '& input': {
-                  width: '100%',
-                  height: '2.2rem',
-                  px: 1,
-                  ml: 2,
-                  mr: 0.5,
-                  fontSize: '1.25rem',
-                  color: 'text.primary',
-                  bgcolor: '#44484e',
-                  borderRadius: '.3rem',
-                  border: 'none',
-                  outline: 'none',
-                },
                 '& svg': {
                   width: '2.2rem',
                   height: '2.2rem',
@@ -171,11 +159,14 @@ export default function ChannelPage() {
                 },
               }}
             >
-              <input
+              <Input
                 {...register('createChannel', { required: true })}
-                autoComplete="off"
+                label="Criar novo canal"
+                color="primary"
                 type="text"
-                placeholder="Criar novo canal"
+                size="small"
+                width={{ xs: '100%', md: '100%' }}
+                m={{ xs: '0 0 0 1rem', md: '0 0 0 1rem' }}
               />
               <Tooltip title="Crier um canal">
                 <IconButton

@@ -1,32 +1,24 @@
 import { forwardRef, ForwardRefRenderFunction } from 'react';
 import { TextField } from '@mui/material';
-
-interface InputProps {
-  defaultValue?: string;
-  id: string;
-  label: string;
-  color?: 'primary' | 'secondary' | 'error';
-  type?: string;
-  size: 'medium' | 'small';
-}
+import { InputProps } from './types';
 
 const InputStyle: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { id, label, color, type, size },
+  { label, color, type, defaultValue, size, width, m, ...rest },
   ref,
 ) => {
   return (
     <TextField
       hiddenLabel
-      id={id}
+      id={type}
       label={label}
       color={color}
       type={type}
-      defaultValue=""
+      defaultValue={defaultValue}
       variant="outlined"
       size={size}
       sx={{
-        width: '350px',
-        mb: 5,
+        width: width,
+        m: m,
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: 'primary.light',
@@ -39,7 +31,8 @@ const InputStyle: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           },
         },
       }}
-      ref={ref}
+      inputRef={ref}
+      {...rest}
     />
   );
 };
