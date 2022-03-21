@@ -1,5 +1,5 @@
 export interface FormDataCreate {
-  nameChat: string;
+  createChannel: string;
 }
 
 export interface FormDataSend {

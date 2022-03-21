@@ -1,70 +1,69 @@
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { formatRelative } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-
-import { Box, IconButton, Typography } from '@mui/material';
-import { AiOutlineSend } from 'react-icons/ai';
-import { useReduxSelector } from '../../hooks/useReduxSelector';
-import MessageItem from '../MessageItem';
-import { useChat } from '../../hooks/useChat';
-import { FormData } from './types';
 import {
   collection,
   getDocs,
   query,
   where,
-  orderBy,
   DocumentData,
 } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
+import { useForm } from 'react-hook-form';
+import { formatRelative } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+import { Box, IconButton, Typography } from '@mui/material';
+import { Input } from '../InputBase';
+import { AiOutlineSend } from 'react-icons/ai';
+import { useReduxSelector } from '../../hooks/useReduxSelector';
+import MessageItem from '../MessageItem';
+import { useChat } from '../../hooks/useChat';
+import { FormData } from './types';
 
 export default function Chat() {
   const [message, setMessages] = useState<DocumentData[]>([]);
   const { register, handleSubmit, reset, formState } = useForm<FormData>();
   const { chatMessage } = useReduxSelector(state => state.chat);
-  const messagesCollectionRef = collection(db, 'messages');
+  const chatCollectionRef = collection(db, 'chat');
   const { sendMessage } = useChat();
-
-  const queryChatsE = query(
-    messagesCollectionRef,
-    where('chatId', '==', chatMessage.id),
-  );
-  const querySnapshot = getDocs(queryChatsE);
-
-  useEffect(() => {
-    async function QueryChats() {
-      const queryChats = await query(
-        messagesCollectionRef,
-        where('chatId', '==', chatMessage.id),
-        orderBy('createdUp', 'asc'),
-      );
-
-      const querySnapshot = await getDocs(queryChats);
-      const messagesForEach: DocumentData[] = [];
-      querySnapshot.forEach(item => {
-        const data = item.data();
-        messagesForEach.push({
-          ...data,
-          idMsg: data.uid,
-          idUser: data.userId,
-          author: data.username,
-          message: data.message,
-          date: formatRelative(new Date(data.createdUp.toDate()), new Date(), {
-            locale: ptBR,
-          }),
-        });
-      });
-      setMessages(messagesForEach);
-    }
-    QueryChats();
-  }, [chatMessage.uid, querySnapshot]);
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
       reset({ body: '' });
     }
   }, [formState, reset]);
+
+  useEffect(() => {
+    async function QueryChats() {
+      const queryChats = await query(
+        chatCollectionRef,
+        where('uid', '==', chatMessage.uid),
+      );
+
+      const querySnapshot = await getDocs(queryChats);
+
+      querySnapshot.forEach(item => {
+        const data = item.data();
+        const response = data.messages.map((item: DocumentData) => {
+          return {
+            ...item,
+            idMessege: item.uid,
+            idUser: item.userId,
+            username: item.username,
+            message: item.message,
+            createdUp: formatRelative(
+              new Date(item.createdUp.toDate()),
+              new Date(),
+              {
+                locale: ptBR,
+              },
+            ),
+          };
+        });
+        setMessages(response);
+      });
+    }
+    QueryChats();
+  }, [chatMessage.uid, sendMessage]);
 
   return (
     <>
@@ -100,10 +99,10 @@ export default function Chat() {
         >
           {message.map(item => (
             <MessageItem
-              key={item.idMsg}
+              key={item.idMessege}
               idUser={item.idUser}
               author={item.username}
-              date={item.date}
+              date={item.createdUp}
               body={item.message}
             />
           ))}
@@ -118,15 +117,6 @@ export default function Chat() {
           component="form"
           onSubmit={handleSubmit(sendMessage)}
           sx={{
-            '& input': {
-              width: '100%',
-              height: '2.2rem',
-              px: 1,
-              borderRadius: '.3rem',
-              fontSize: '1.25rem',
-              border: 'none',
-              outline: 'none',
-            },
             '& svg': {
               width: '2rem',
               height: '2rem',
@@ -135,11 +125,14 @@ export default function Chat() {
             },
           }}
         >
-          <input
+          <Input
             {...register('body', { required: true })}
-            autoComplete="off"
+            label="Mensagem"
+            color="primary"
             type="text"
-            placeholder="Mensagem"
+            size="small"
+            width={{ xs: '100%', md: '100%' }}
+            autoComplete="off"
           />
 
           <IconButton

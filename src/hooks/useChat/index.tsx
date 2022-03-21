@@ -6,7 +6,6 @@ import {
   doc,
   getDoc,
   addDoc,
-  setDoc,
   updateDoc,
   arrayUnion,
 } from 'firebase/firestore';
@@ -19,7 +18,6 @@ import { FormDataCreate, FormDataSend } from './types';
 
 export function useChat() {
   const chatCollectionRef = collection(db, 'chat');
-  const messagesCollectionRef = collection(db, 'messages');
   const dispatch = useReduxDispatch();
   const {
     chat: { chatMessage },
@@ -33,14 +31,12 @@ export function useChat() {
           addDoc(chatCollectionRef, {
             uid: uuid(),
             userId: user.uid,
-            name: data.nameChat,
+            name: data.createChannel,
             createdUp: new Date(),
             messages: [],
             usersId: [user.uid],
           });
           dispatch(isCreateChat(true));
-        } else {
-          console.log('error');
         }
       });
       dispatch(isCreateChat(false));
@@ -52,20 +48,17 @@ export function useChat() {
 
   const sendMessage: SubmitHandler<FormDataSend> = async data => {
     try {
-      setDoc(
-        doc(messagesCollectionRef),
-        {
+      const chatRef = doc(chatCollectionRef, chatMessage.id);
+      updateDoc(chatRef, {
+        messages: arrayUnion({
           uid: uuid(),
           chatId: chatMessage.id,
           userId: userInfo.id,
           message: data.body,
           createdUp: new Date(),
           username: userInfo.email,
-        },
-        {
-          merge: true,
-        },
-      );
+        }),
+      });
     } catch (error) {
       console.log('Error: ', error);
     }

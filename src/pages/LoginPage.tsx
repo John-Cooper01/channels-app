@@ -1,10 +1,12 @@
-import { Container, Box, TextField, Divider } from '@mui/material';
-import ButtonStyle from '../components/Button';
+import { Container, Box, Divider } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { useAuth } from '../hooks/useAuth';
 import { FormDataLoginPage } from './types';
+
+import ButtonStyle from '../components/Button';
+import { Input } from '../components/InputBase';
 
 export default function LoginPage() {
   const { register, handleSubmit } = useForm<FormDataLoginPage>();
@@ -39,51 +41,23 @@ export default function LoginPage() {
               component="form"
               onSubmit={handleSubmit(loginEmailAndPassword)}
             >
-              <TextField
+              <Input
                 {...register('email')}
                 label="Email"
                 color="primary"
                 type="email"
-                variant="outlined"
                 size="medium"
-                sx={{
-                  width: { xs: '300px', md: '350px' },
-                  mb: 5,
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'primary.light',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'primary.light',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'primary.dark',
-                    },
-                  },
-                }}
+                width={{ xs: '300px', md: '350px' }}
+                m={{ xs: '0 0 1.5rem 0', md: '0 0 1.5rem 0' }}
               />
-              <TextField
+
+              <Input
                 {...register('password')}
                 label="password"
                 color="primary"
                 type="password"
-                variant="outlined"
                 size="medium"
-                sx={{
-                  width: { xs: '300px', md: '350px' },
-                  mb: 3,
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'primary.light',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'primary.light',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'primary.dark',
-                    },
-                  },
-                }}
+                m={{ xs: '0 0 1.5rem 0', md: '0 0 1.5rem 0' }}
               />
 
               <ButtonStyle
